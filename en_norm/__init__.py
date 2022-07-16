@@ -1,7 +1,8 @@
+from ast import Str
 import inflect
 from dateutil import parser
 import re
-
+import random
 
 def convert_currency(x):
   """
@@ -18,10 +19,25 @@ def convert_currency(x):
       p = inflect.engine()
       if "." in x:
         cents = x.split(".")
-        x = (p.number_to_words(cents[0][1:]) + " dollars and "
-             + p.number_to_words(cents[1]) + " cents")
+        # x = (p.number_to_words(cents[0][1:]) + " dollars and "
+        #      + p.number_to_words(cents[1]) + " cents")
+        x = p.number_to_words(cents[0][1:])
+        if cents[0][1:] == "1":
+          x += " dollar and "
+        else:
+          x += " dollars and "
+        x += p.number_to_words(cents[1])
+        if cents[1] == "01":
+          x += " cent"
+        else:
+          x += " cents"
       else:
-        x = p.number_to_words(x[1:]) + " dollars"
+        # x = p.number_to_words(x[1:]) + " dollars"
+        x = p.number_to_words(x[1:])
+        if x[1:] == "1":
+          x += " dollar"
+        else:
+          x += " dollars"
   return x
 
 
@@ -40,11 +56,19 @@ def convert_date(x):
     if ((x[x.find("/")-1].isdigit()
         and x[x.find("/")+1].isdigit())
        or (x[x.find("-")-1].isdigit() and x[x.find("-")+1].isdigit())):
-      d = parser.parse
+      d = parser.parse(x)
       p = inflect.engine()
+      print(random.random())
+      # z = (d.strftime("%B ")
+      #      + p.number_to_words(p.ordinal(int(d.strftime("%d"))))
+      #      + ", " + p.number_to_words(d.strftime("%Y")))
       z = (d.strftime("%B ")
            + p.number_to_words(p.ordinal(int(d.strftime("%d"))))
-           + ", " + p.number_to_words(d.strftime("%Y")))
+           + ", ")
+      if len(str(d.strftime("%Y"))) == 4:
+        z += p.number_to_words(d.strftime("%Y")[:2]) + " " + p.number_to_words(d.strftime("%Y")[-2:])
+      else:
+        z += p.number_to_words(d.strftime("%Y"))
       return z
   return x
 
@@ -185,35 +209,65 @@ def convert_abbreviation(x):
   return x
 
 
-def tts_norm(str):
+def tts_norm(s, punctuation = False):
   res = ""
-  str = re.sub(' +', ' ', str)
-  str = str.replace(",", "")
-  str = str.replace("-", " ")
-  str = str.replace("(", " ")
-  str = str.replace(")", " ")
-  str = str.replace("\"", "")
-  str = str.replace("\n", " \n")
-  str = str.split(" ")
-  for x in str:
-    if len(x) > 1 and x.count(".") == 1:
-      if x[len(x)-2] == "." and x[len(x)-1] == "\n":
-        x = x[:len(x)-2] + "\n"
-      elif x[len(x)-1] == ".":
+  if punctuation:
+    s = s.replace("(", "( ")
+    s = s.replace(")", " )")
+    s = s.replace(" \"", "  \" ")
+    s = s.replace("\" ", " \"  ")
+    s = s.replace("\n", " \n")
+    s = s.replace(", ", " , ")
+    s = s.replace(":", " :")
+  else:
+    s = s.replace("(", " ")
+    s = s.replace(")", " ")
+    s = s.replace("\"", "")
+    s = s.replace("\n", " \n")
+    s = s.replace(", ", " ")
+    s = s.replace(":", "")
+  s = re.sub("(\$)([0-9\.]+) (million|thousand|trillion|hundred|billion)", r'\2 \3 \1 ', s)
+  s = re.sub("([a-zA-Z])-([a-zA-Z])", r'\1 - \2', s)
+  if not punctuation:
+    s = s.replace(" - ", " ")
+  s = s.replace("%", " percent")
+  s = s.replace("$ ", "dollars")
+  s = re.sub(' +', ' ', s)
+  s = s.split(" ")
+  for x in s:
+    add_period = False
+    x = convert_abbreviation(x)
+    if len(x) > 1:
+      if x[len(x)-1] == ".":
+        if punctuation:
+          add_period = True
         x = x[:len(x)-1]
     if any(char.isdigit() for char in x):
       x = convert_currency(x)
       x = convert_date(x)
       x = convert_time(x)
       x = convert_ordinal(x)
-      if(x.isdigit()):
+      x_without_punc = x.replace(",", "")
+      x_without_punc = x_without_punc.replace(".", "")
+      if(x_without_punc.isdigit()):
         x = x.replace(",", "")
         p = inflect.engine()
         x = p.number_to_words(x) + " "
     x = convert_roman(x)
-    x = convert_abbreviation(x)
     res += x + " "
-  res = res.replace(".", "")
-  res = res.replace(",", "")
-  res = res.replace("-", " ")
+  res = res.replace("  \"  ", "\"")
+  res = res.replace(" \" ", "\"")
+  if punctuation:
+    res = res.replace(" .", ".")
+    res = res.replace(" ,", ",")
+    res = res.replace(" - ", "-")
+    res = res.replace("( ", "(")
+    res = res.replace(" )", ")")
+    res = res.replace(" \n", "\n")
+    res = res.replace(" :", ":")
+  else:
+    res = res.replace("-", " ")
+    res = res.replace(",", "")
+    res = res.replace(".", "")
+  res = re.sub(' +', ' ', res)
   return res.strip(" ")
