@@ -18,10 +18,11 @@ def convert_currency(x):
       x = x.replace(",", "")
       p = inflect.engine()
       if "." in x:
+        # seperating by period to get list with two elements, dollars and cents
         cents = x.split(".")
-        # x = (p.number_to_words(cents[0][1:]) + " dollars and "
-        #      + p.number_to_words(cents[1]) + " cents")
+        # removing '$' sign from dollars
         x = p.number_to_words(cents[0][1:])
+        # checking for singular of plural of dollar and cent
         if cents[0][1:] == "1":
           x += " dollar and "
         else:
@@ -32,7 +33,6 @@ def convert_currency(x):
         else:
           x += " cents"
       else:
-        # x = p.number_to_words(x[1:]) + " dollars"
         x = p.number_to_words(x[1:])
         if x[1:] == "1":
           x += " dollar"
@@ -40,8 +40,23 @@ def convert_currency(x):
           x += " dollars"
   return x
 
+def convert_year(y):
+  print("HERRE")
+  y = int(y)
+  p = inflect.engine()
+  # randomizing phrasing to immitate spoken english
+  if random.random() < 0.5 and y%100 >= 10:
+    # before 2000, the year is read in hundreds (ex. nineteen hundred xxx, thirteen hundred xxx)
+    if y >= 2000 or y <= 99:
+      y = p.number_to_words(y)
+    else:
+      y = p.number_to_words(str(int((y-y%100)/100))) + " hundred " + p.number_to_words(y%100)
+  else:
+    # (ex. 2022 -> twenty twenty two, 1931 -> nineteen thirty one)
+    y = p.number_to_words(str(int((y-y%100)/100))) + " " + p.number_to_words(y%100)
+  return y
 
-def convert_date(x):
+def convert_date(x, phrase = False):
   """
     Converts date by checking if there is a / or - surrounded by digits,
     rest of dates formats can be solved with regular
@@ -52,23 +67,39 @@ def convert_date(x):
       Returns:
         Returns a string.
   """
-  if "/" in x or "-" in x:
+  if ("/" in x or "-" in x) or phrase :
+    print("HEREE2")
     if ((x[x.find("/")-1].isdigit()
         and x[x.find("/")+1].isdigit())
-       or (x[x.find("-")-1].isdigit() and x[x.find("-")+1].isdigit())):
+       or (x[x.find("-")-1].isdigit() and x[x.find("-")+1].isdigit())) or phrase:
       d = parser.parse(x)
       p = inflect.engine()
-      print(random.random())
-      # z = (d.strftime("%B ")
-      #      + p.number_to_words(p.ordinal(int(d.strftime("%d"))))
-      #      + ", " + p.number_to_words(d.strftime("%Y")))
-      z = (d.strftime("%B ")
+      a = random.random()
+      if a < 0.33:
+        z = (d.strftime("%B ")
            + p.number_to_words(p.ordinal(int(d.strftime("%d"))))
            + ", ")
-      if len(str(d.strftime("%Y"))) == 4:
-        z += p.number_to_words(d.strftime("%Y")[:2]) + " " + p.number_to_words(d.strftime("%Y")[-2:])
+      elif a < 0.66:
+        z = "the " + p.number_to_words(p.ordinal(int(d.strftime("%d")))) + " of " +(d.strftime("%B ")
+           + ", ")
       else:
-        z += p.number_to_words(d.strftime("%Y"))
+         z = "the " + p.number_to_words(p.ordinal(int(d.strftime("%d")))) + " of " +(d.strftime("%B ")
+           + "in ")
+      z += convert_year(d.strftime("%Y"))
+      # if random.random() < 0.5:
+      #   if d.strftime("%Y") >= 2000 or d.strftime("%Y") <= 999:
+      #     z = (d.strftime("%B ")
+      #         + p.number_to_words(p.ordinal(int(d.strftime("%d"))))
+      #         + ", " + p.number_to_words(d.strftime("%Y")))
+      #   else:
+      #     z =  
+      # # z = (d.strftime("%B ")
+      # #      + p.number_to_words(p.ordinal(int(d.strftime("%d"))))
+      # #      + ", ")
+      # if len(str(d.strftime("%Y"))) == 4:
+      #   z += p.number_to_words(d.strftime("%Y")[:2]) + " " + p.number_to_words(d.strftime("%Y")[-2:])
+      # else:
+      #   z += p.number_to_words(d.strftime("%Y"))
       return z
   return x
 
@@ -226,6 +257,28 @@ def tts_norm(s, punctuation = False):
     s = s.replace("\n", " \n")
     s = s.replace(", ", " ")
     s = s.replace(":", "")
+  # if random.random() < 0.5:
+  #   s = re.sub(" \-([0-9])", r'negative \1', s)
+  # else:
+  #   s = re.sub(" \-([0-9])", r'minus \1|', s)
+  s_lower = s.lower()
+  date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|november|nov|december|dec)\.?\s\w+\,?\s\d{4}')
+  #while(date_pattern.finditer(s))
+  original_len = len(s)
+  date_matches = date_pattern.finditer(s)
+  for match in date_matches:
+    print(match.group(0))
+    print(original_len)
+    print(match.start())
+    print(match.end())
+    print(-(original_len-match.start()))
+    print(-(original_len-match.end()))
+
+    if (original_len-match.end()) == 0:
+      s = s[:-(original_len-match.start())] + convert_date(match.group(), True)
+    else:
+      s = s[:-(original_len-match.start())] + convert_date(match.group(), True) + s[-(original_len-match.end()):];
+  s = re.sub(r'(^|\s)\-(\d)', r' negative \2', s)
   s = re.sub("(\$)([0-9\.]+) (million|thousand|trillion|hundred|billion)", r'\2 \3 \1 ', s)
   s = re.sub("([a-zA-Z])-([a-zA-Z])", r'\1 - \2', s)
   if not punctuation:
@@ -255,6 +308,8 @@ def tts_norm(s, punctuation = False):
         x = p.number_to_words(x) + " "
     x = convert_roman(x)
     res += x + " "
+    if add_period:
+      r += "."
   res = res.replace("  \"  ", "\"")
   res = res.replace(" \" ", "\"")
   if punctuation:
