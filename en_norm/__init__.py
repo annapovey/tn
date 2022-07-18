@@ -1,4 +1,5 @@
 from ast import Str
+from contextlib import nullcontext
 import inflect
 from dateutil import parser
 import re
@@ -41,20 +42,47 @@ def convert_currency(x):
   return x
 
 def convert_year(y):
-  print("HERRE")
   y = int(y)
   p = inflect.engine()
   # randomizing phrasing to immitate spoken english
-  if random.random() < 0.5 and y%100 >= 10:
-    # before 2000, the year is read in hundreds (ex. nineteen hundred xxx, thirteen hundred xxx)
-    if y >= 2000 or y <= 99:
-      y = p.number_to_words(y)
+  if ((y-y%100)/100)%10 == 0:
+    if y%100 == 0:
+      y = p.number_to_words(int((y-y%1000)/1000)) + " thousand"
+    elif y%100 < 10:
+      if random.random() < 0.5:
+        y = p.number_to_words(int((y-y%1000)/1000)) + " thousand " +  p.number_to_words(int(y%10))
     else:
-      y = p.number_to_words(str(int((y-y%100)/100))) + " hundred " + p.number_to_words(y%100)
-  else:
-    # (ex. 2022 -> twenty twenty two, 1931 -> nineteen thirty one)
-    y = p.number_to_words(str(int((y-y%100)/100))) + " " + p.number_to_words(y%100)
-  return y
+      if random.random() < 0.5:
+        y = p.number_to_words(int((y-y%100)/100)) + " " + p.number_to_words(y%100)
+      else:
+        y = p.number_to_words(int((y-y%1000)/1000)) + " thousand " +  p.number_to_words(int(y%10))
+  elif y < 2000 and y >= 1100:
+    if y%100 == 0:
+      y = p.number_to_words(y/100) + " hundred"
+    else:
+      if y%100 <  10:
+        y = p.number_to_words(int((y-y%100)/100)) + " O " + p.number_to_words(y%100)
+      else:
+        y = p.number_to_words(int((y-y%100)/100)) + " " + p.number_to_words(y%100)
+  
+  # if random.random() < 0.5:
+  #   if y <= 99:
+  #     y = p.number_to_words(y)
+  #   elif y >= 2000 and y <= 2099:
+  #     # in the 21st century we say two thousand (ex. 2006 -> two thousand six or two thousand and six)
+  #     if random.random() < 0.6:
+  #       y = "two thousand " +  p.number_to_words(y%100)
+  #     else:
+  #       y = p.number_to_words(y)
+  #   else:
+  #     # before 2000, the year is read in hundreds (ex. nineteen hundred xxx, thirteen hundred xxx)
+  #     y = p.number_to_words(str(int((y-y%100)/100))) + " hundred " + p.number_to_words(y%100)
+  # else:
+  #   # (ex. 2022 -> twenty twenty two, 1931 -> nineteen thirty one)
+  #   print("PICKED THIS")
+  #   if 
+   # y = p.number_to_words(str(int((y-y%100)/100))) + " " + p.number_to_words(y%100)
+  return str(y)
 
 def convert_date(x, phrase = False):
   """
@@ -67,8 +95,7 @@ def convert_date(x, phrase = False):
       Returns:
         Returns a string.
   """
-  if ("/" in x or "-" in x) or phrase :
-    print("HEREE2")
+  if (x.count("/") == 2 or x.count("-") == 2) or phrase :
     if ((x[x.find("/")-1].isdigit()
         and x[x.find("/")+1].isdigit())
        or (x[x.find("-")-1].isdigit() and x[x.find("-")+1].isdigit())) or phrase:
@@ -119,6 +146,8 @@ def convert_time(x):
       d = parser.parse(x)
       p = inflect.engine()
       if x.count(':') == 1:
+        if d.strftime("%M") == "00":
+          return p.number_to_words(d.strftime("%H")) + " o'clock"
         return (p.number_to_words(d.strftime("%H"))
                 + " hours and " + p.number_to_words(d.strftime("%M"))
                 + " minutes")
@@ -249,31 +278,25 @@ def tts_norm(s, punctuation = False):
     s = s.replace("\" ", " \"  ")
     s = s.replace("\n", " \n")
     s = s.replace(", ", " , ")
-    s = s.replace(":", " :")
+    s = re.sub(r'([a-zA-Z])]\-([a-z][A-Z])', r'\1 \- \2', s)
   else:
     s = s.replace("(", " ")
     s = s.replace(")", " ")
     s = s.replace("\"", "")
     s = s.replace("\n", " \n")
     s = s.replace(", ", " ")
-    s = s.replace(":", "")
-  # if random.random() < 0.5:
-  #   s = re.sub(" \-([0-9])", r'negative \1', s)
-  # else:
-  #   s = re.sub(" \-([0-9])", r'minus \1|', s)
+    s = re.sub(r'([a-zA-Z])\-([a-z][A-Z])', r'\1  \2', s)
+  #s = re.sub(r'(\d)\-(\d+[^\-])', r'\1 to \2 ', s)
+  date_period_pattern = re.compile(r'(\d{4})\-(\d{4}[^\-])')
+  date_period_matches = date_period_pattern.finditer(s)
+  for match in date_period_matches:
+    print(s[match.start()+5:match.start()+9])
+    s = s[:match.start()] + convert_year(s[match.start():match.start()+4]) + " to " + convert_year(s[match.start()+5:match.start()+9])
   s_lower = s.lower()
-  date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|november|nov|december|dec)\.?\s\w+\,?\s\d{4}')
-  #while(date_pattern.finditer(s))
-  original_len = len(s)
-  date_matches = date_pattern.finditer(s)
+  date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|november|nov|december|dec)\.?\s\w+\,?\s\d+')
+  original_len = len(s_lower)
+  date_matches = date_pattern.finditer(s_lower)
   for match in date_matches:
-    print(match.group(0))
-    print(original_len)
-    print(match.start())
-    print(match.end())
-    print(-(original_len-match.start()))
-    print(-(original_len-match.end()))
-
     if (original_len-match.end()) == 0:
       s = s[:-(original_len-match.start())] + convert_date(match.group(), True)
     else:
