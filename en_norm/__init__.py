@@ -282,6 +282,7 @@ def convert_digit(x):
   if (x_without_punc.isdigit()):
     if "." in x:
       x = x.strip("0")
+      x = x.strip(".")
     x = x.replace(",", "")
     p = inflect.engine()
     x = p.number_to_words(x) + " "
@@ -313,19 +314,47 @@ def beginning_punctuation(punctuation, s):
   s = re.sub(r'x([0-9]+)', r'times \1', s)
   s = s.replace("%", " percent")
   s = s.replace("$ ", "dollars")
+  s = re.sub(u'\N{DEGREE SIGN}', 'degrees ', s)
+  s = re.sub(r'degrees ([0-9]+)', '\1 degrees', s)
   s = re.sub(' +', ' ', s)
   return s
 
+def final_punctuation(res, punctuation):
+  res = res.replace("  \"  ", "\"")
+  res = res.replace(" \" ", "\"")
+  if punctuation:
+    res = res.replace(" .", ".")
+    res = res.replace(" ,", ",")
+    res = res.replace(" - ", "-")
+    res = res.replace("( ", "(")
+    res = res.replace(" )", ")")
+    res = res.replace(" \n", "\n")
+    res = res.replace(" :", ":")
+  else:
+    res = re.sub(r'[^A-Z^a-z^\n^\']', ' ', res)
+  res = re.sub(r' +', ' ', res)
+  return res
+
 def date_patterns(s):
+  # (ex. 2012-2019 -> two thousand twelve to two thousand nineteen, 1931-1987 -> nineteen thirty one to nineteen eighty seven)
   date_range_pattern = re.compile(r'(\d{4})\-(\d{4}[^\-])')
   date_range_matches = date_range_pattern.finditer(s)
   for match in date_range_matches:
     print(s[match.start() + 5:match.start() + 9])
     s = s[:match.start()] + convert_year(s[match.start():match.start() + 4]) + " to " + convert_year(
       s[match.start() + 5:match.start() + 9])
+
+  date_range_pattern = re.compile(r'(\d{4}) to (\d{4})')
+  date_range_matches = date_range_pattern.finditer(s)
+  for match in date_range_matches:
+    print(s[match.start():match.start() + 4])
+    print(s[match.end()-4:match.end()])
+    s = (s[:match.start()] + convert_year(s[match.start():match.start() + 4]) + " to " + convert_year(
+      s[match.end()-4:match.end()]))
+  # (ex. Jan. 13 1981 -> January thirteen nineteen eighty one, November 2 21)
   s_lower = s.lower()
   date_pattern = re.compile(
-    r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|november|nov|december|dec)\.?\s\w+\,?\s\d+')
+    r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|sep|october|oct|november|nov|december|dec)\.?\s\d+\,?\s\d+')
   original_len = len(s_lower)
   date_matches = date_pattern.finditer(s_lower)
   for match in date_matches:
@@ -334,8 +363,22 @@ def date_patterns(s):
     else:
       s = s[:-(original_len - match.start())] + convert_date(match.group(), True) + s[-(
             original_len - match.end()):]
-  month_date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|november|nov|december|dec)\.?\s\d+')
+  
   s_lower = s.lower()
+  date_pattern = re.compile(
+    r'\d+\s(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|september|sept|sep|november|nov|december|dec)\.?\,?\s\d+')
+  original_len = len(s_lower)
+  date_matches = date_pattern.finditer(s_lower)
+  for match in date_matches:
+    print(match.group())
+    if (original_len - match.end()) == 0:
+      s = s[:-(original_len - match.start())] + convert_date(match.group(), True)
+    else:
+      s = s[:-(original_len - match.start())] + convert_date(match.group(), True) + s[-(
+            original_len - match.end()):]
+  
+  s_lower = s.lower()
+  month_date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|sep|october|oct|november|nov|december|dec)\.?\s\d+')
   original_len = len(s_lower)
   month_date_matches = month_date_pattern.finditer(s_lower)
   for match in month_date_matches:
@@ -372,17 +415,5 @@ def tts_norm(s, punctuation=False):
     res += x + " "
     if add_period:
       res += "."
-  res = res.replace("  \"  ", "\"")
-  res = res.replace(" \" ", "\"")
-  if punctuation:
-    res = res.replace(" .", ".")
-    res = res.replace(" ,", ",")
-    res = res.replace(" - ", "-")
-    res = res.replace("( ", "(")
-    res = res.replace(" )", ")")
-    res = res.replace(" \n", "\n")
-    res = res.replace(" :", ":")
-  else:
-    res = re.sub(r'[^A-Z^a-z^\n]', ' ', res)
-  res = re.sub(r' +', ' ', res)
+  res = final_punctuation(res, punctuation)
   return res.strip(" ")
