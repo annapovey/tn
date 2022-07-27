@@ -44,6 +44,7 @@ def convert_currency(x):
 
 
 def convert_year(y):
+  print(y)
   y = int(y)
   p = inflect.engine()
   # randomizing phrasing to immitate spoken english
@@ -289,24 +290,24 @@ def convert_digit(x):
   return x
 
 def beginning_punctuation(punctuation, s):
-  if punctuation:
-    s = re.sub(r'[\;]', ' \;', s)
-    s = s.replace("(", "( ")
-    s = s.replace(")", " )")
-    s = s.replace(" \"", "  \" ")
-    s = s.replace("/", " / ")
-    s = s.replace("\" ", " \"  ")
-    s = s.replace("\n", " \n")
-    s = s.replace(", ", " , ")
-    s = re.sub(r'([a-zA-Z])]\-([a-z][A-Z])', r'\1 \- \2', s)
-  else:
-    s = re.sub(r'[\;]', '', s)
-    s = s.replace("(", " ")
-    s = s.replace(")", " ")
-    s = s.replace("\"", "")
-    s = s.replace("\n", " \n")
-    s = s.replace(", ", " ")
-    s = re.sub(r'([a-zA-Z])\-([a-z][A-Z])', r'\1  \2', s)
+  #if punctuation:
+  s = re.sub(r'[\;]', ' \;', s)
+  s = s.replace("(", "( ")
+  s = s.replace(")", " )")
+  s = s.replace(" \"", "  \" ")
+  s = s.replace("/", " / ")
+  s = s.replace("\" ", " \"  ")
+  s = s.replace("\n", " \n")
+  s = s.replace(", ", " , ")
+  s = re.sub(r'([a-zA-Z])]\-([a-z][A-Z])', r'\1 \- \2', s)
+  # else:
+  #   s = re.sub(r'[\;]', '', s)
+  #   s = s.replace("(", "( ")
+  #   s = s.replace(")", " )")
+  #   s = s.replace("\"", "")
+  #   s = s.replace("\n", " \n")
+  #   s = s.replace(", ", " ")
+  #   s = re.sub(r'([a-zA-Z])\-([a-z][A-Z])', r'\1  \2', s)
   s = re.sub(r'(^|\s)\-(\d)', r' negative \2', s)
   s = re.sub("(\$)([0-9\.]+) (million|thousand|trillion|hundred|billion)", r'\2 \3 \1 ', s)
   s = re.sub("([a-zA-Z])-([a-zA-Z])", r'\1 - \2', s)
@@ -336,22 +337,22 @@ def final_punctuation(res, punctuation):
   return res
 
 def date_patterns(s):
+  date_parenthesis_pattern = re.compile(r'\( \d{4} \)')
+  date_parenthesis_matches = reversed(list(date_parenthesis_pattern.finditer(s)))
+  for match in date_parenthesis_matches:
+    s = s[:match.start()] + "( " + convert_year(s[match.start()+2:match.end()-2]) + " )" + s[match.end():]
   # (ex. 2012-2019 -> two thousand twelve to two thousand nineteen, 1931-1987 -> nineteen thirty one to nineteen eighty seven)
   date_range_pattern = re.compile(r'(\d{4})\-(\d{4}[^\-])')
-  date_range_matches = date_range_pattern.finditer(s)
+  date_range_matches = reversed(list(date_range_pattern.finditer(s)))
   for match in date_range_matches:
-    print(s[match.start() + 5:match.start() + 9])
     s = s[:match.start()] + convert_year(s[match.start():match.start() + 4]) + " to " + convert_year(
-      s[match.start() + 5:match.start() + 9])
+      s[match.start() + 5:match.start() + 9]) + s[match.end():]
 
   date_range_pattern = re.compile(r'(\d{4}) to (\d{4})')
-  date_range_matches = date_range_pattern.finditer(s)
+  date_range_matches = reversed(list(date_range_pattern.finditer(s)))
   for match in date_range_matches:
-    print(s[match.start():match.start() + 4])
-    print(s[match.end()-4:match.end()])
-    s = (s[:match.start()] + convert_year(s[match.start():match.start() + 4]) + " to " + convert_year(
-      s[match.end()-4:match.end()]))
-  # (ex. Jan. 13 1981 -> January thirteen nineteen eighty one, November 2 21)
+    s = s[:match.start()] + convert_year(s[match.start():match.start() + 4]) + " to " + convert_year(s[match.end()-4:match.end()])
+  # (ex. n. 13 1981 -> January thirteen nineteen eighty one, November 2 21)
   s_lower = s.lower()
   date_pattern = re.compile(
     r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|sep|october|oct|november|nov|december|dec)\.?\s\d+\,?\s\d+')
