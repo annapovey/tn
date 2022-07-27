@@ -274,6 +274,8 @@ def beginning_punctuation(punctuation, s):
   return s
 
 def final_punctuation(res, punctuation):
+  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
+  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
   res = res.replace("  \"  ", "\"")
   res = res.replace(" \" ", "\"")
   if punctuation:
