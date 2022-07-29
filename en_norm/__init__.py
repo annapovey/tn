@@ -227,8 +227,6 @@ def convert_roman(x):
     p = inflect.engine()
     return p.number_to_words(res)
   return x
-
-
 # end of taken code
 
 def convert_abbreviation(x):
@@ -250,6 +248,7 @@ def convert_abbreviation(x):
 
 def convert_digit(x):
   p = inflect.engine()
+  # numbers seperated by a dash not in a date haven't been dealt with
   dash_pattern = re.compile(r'\d+-\d+')
   dash_pattern_matches = reversed(list(dash_pattern.finditer(x)))
   for match in dash_pattern_matches:
@@ -259,14 +258,15 @@ def convert_digit(x):
   x_without_punc = x_without_punc.replace(".", "")
   if (x_without_punc.isdigit()):
     if "." in x:
+      # stripping trailing zeros in decimals or trailing '.0' on integers
       x = x.strip("0")
       x = x.strip(".")
     x = x.replace(",", "")
     x = p.number_to_words(x) + " "
   return x
 
-def beginning_punctuation(punctuation, s):
-  #if punctuation:
+def beginning_punctuation(s):
+  # if user doesn't want punctuation, it is removed at the end
   s = re.sub(r'[\;]', ' \;', s)
   s = s.replace("(", "( ")
   s = s.replace(")", " )")
@@ -290,6 +290,7 @@ def beginning_punctuation(punctuation, s):
   return s
 
 def final_punctuation(res, punctuation):
+  # acronyms are seperated by spaces (ex. NASA -> N A S A)
   res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
   res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
   res = res.replace("  \"  ", "\"")
@@ -371,7 +372,7 @@ def date_patterns(s):
 def tts_norm(s, punctuation=False):
   res = ""
   # if punctuation is being kept, it should be spaced out from regular
-  s = beginning_punctuation(punctuation, s)
+  s = beginning_punctuation(s)
   s = date_patterns(s)
   s = s.split(" ")
   print(s)
