@@ -44,32 +44,43 @@ def convert_currency(x):
 
 
 def convert_year(y):
+  # randomizing phrasing to immitate spoken english
   y = int(y)
   p = inflect.engine()
-  # randomizing phrasing to immitate spoken english
+  # if second digit is zero
   if ((y - y % 100) / 100) % 10 == 0:
+    # if last two digits are zero (ex. 2000 -> two thousand, 1000 -> one thousand)
     if y % 100 == 0:
       y = p.number_to_words(int((y - y % 1000) / 1000)) + " thousand"
+    # if last two digits less than ten (ex. 2010 -> two thousand ten, 1008 -> one thousand eight)
     elif y % 100 < 10:
       if random.random() < 0.5:
         y = p.number_to_words(int((y - y % 1000) / 1000)) + " thousand " + p.number_to_words(int(y % 10))
+      # other half of the time the number will get normally converted in convert_digit()
+    # else last two digits are greater than 10
     else:
+      # ex. 2022 -> twenty twenty two, 1011 -> ten eleven
       if random.random() < 0.5:
         y = p.number_to_words(int((y - y % 100) / 100)) + " " + p.number_to_words(y % 100)
+      # ex. 2022 -> two thousand twenty two, 1011 -> one thousand eleven
       else:
         y = p.number_to_words(int((y - y % 1000) / 1000)) + " thousand " + p.number_to_words(int(y % 10))
+  # four digit numbers not 2000 or 1000
   elif y < 2000 and y >= 1100:
+    # if last two digits are zeros (ex. 1900 -> ninetenn hundred, 1200 -> twelve hundred)
     if y % 100 == 0:
       y = p.number_to_words(y / 100) + " hundred"
+    # if last two digits less than ten (ex. 1909 -> ninetenn O nine, 1301 -> thirteen O one)
+    elif y % 100 < 10:
+      y = p.number_to_words(int((y - y % 100) / 100)) + " O " + p.number_to_words(y % 100)
+    # else last two digits greater than ten (ex. 1931 -> nineteen thirty one, 1757 -> seventeen fifty seven)
     else:
-      if y % 100 < 10:
-        y = p.number_to_words(int((y - y % 100) / 100)) + " O " + p.number_to_words(y % 100)
-      else:
-        y = p.number_to_words(int((y - y % 100) / 100)) + " " + p.number_to_words(y % 100)
+      y = p.number_to_words(int((y - y % 100) / 100)) + " " + p.number_to_words(y % 100)
   return str(y)
 
 
 def convert_date(x, phrase=False):
+  # parameter phrase was already checked to be a phrase
   """
     Converts date by checking if there is a / or - surrounded by digits,
     rest of dates formats can be solved with regular
@@ -87,18 +98,23 @@ def convert_date(x, phrase=False):
       d = parser.parse(x)
       p = inflect.engine()
       a = random.random()
+      #three ways of saying dates
+      # ex. October fourth, ---
       if a < 0.33:
-        z = (d.strftime("%B ")
+        x = (d.strftime("%B ")
            + p.number_to_words(p.ordinal(int(d.strftime("%d"))))
            + ", ")
+      # ex. the fourth of October, 
       elif a < 0.66:
-        z = "the " + p.number_to_words(p.ordinal(int(d.strftime("%d")))) + " of " + (d.strftime("%B ")
+        x = "the " + p.number_to_words(p.ordinal(int(d.strftime("%d")))) + " of " + (d.strftime("%B ")
                                                + ", ")
+      # ex. the fourth of October in 
       else:
-        z = "the " + p.number_to_words(p.ordinal(int(d.strftime("%d")))) + " of " + (d.strftime("%B ")
+        x = "the " + p.number_to_words(p.ordinal(int(d.strftime("%d")))) + " of " + (d.strftime("%B ")
                                                + "in ")
-      z += convert_year(d.strftime("%Y"))
-      return z
+      # all cases have year at the end
+      x += convert_year(d.strftime("%Y"))
+      return x
   return x
 
 
