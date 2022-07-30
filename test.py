@@ -1,15 +1,15 @@
 from en_norm import tts_norm
-import pytest
 
  #testing currency
-def test1():
+def basic_test():
     t1 = "thousand"
     a1 = "thousand"
     assert(tts_norm(t1)==a1)
 
-# t2 = "$3.9 billion"
-# a2 = "three point nine billion dollars"
-# assert(tts_norm(t2)==a2)
+def currency_test():
+    t2 = "$3.9 billion"
+    a2 = "three point nine billion dollars"
+    assert(tts_norm(t2)==a2)
 # t3 = "75% of children have a life expectancy of under 18."
 # a3 = "seventy five percent of children have a life expectancy of under eighteen"
 #assert(tts_norm(t3)==a3)
