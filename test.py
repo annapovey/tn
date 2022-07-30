@@ -1,20 +1,20 @@
-from en_norm import tts_norm
-import pytest
-
-#testing currency
-def test_1():
-    t1 = "thousand"
-    a1 = "thousand"
-    assert(tts_norm(t1)==a1)
-
-# import pytest
 # from en_norm import tts_norm
+# import pytest
 
-#  #testing currency
-# def basic_test():
+# #testing currency
+# def test_1():
 #     t1 = "thousand"
 #     a1 = "thousand"
 #     assert(tts_norm(t1)==a1)
+
+import pytest
+from en_norm import tts_norm
+
+ #testing currency
+def basic_test():
+    t1 = "thousand"
+    a1 = "thousand"
+    assert(tts_norm(t1)==a1)
 
 # def currency_test():
 #     t2 = "$3.9 billion"
