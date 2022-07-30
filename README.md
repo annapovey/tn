@@ -1,5 +1,4 @@
 # tn
-text normalization
 
 [![Python application](https://github.com/annapovey/tn/actions/workflows/python-app.yml/badge.svg)](https://github.com/annapovey/tn/actions/workflows/python-app.yml)
 ```
@@ -10,5 +9,3 @@ source norm_env/bin/activate
 (norm_env) np@Ns-MacBook-Pro tn % pip install python-dateutil
 (norm_env) np@Ns-MacBook-Pro tn % pip install inflect
 ```
-only more than one space character are replaces with one space character
-new lines and tabs are kept in formatting
