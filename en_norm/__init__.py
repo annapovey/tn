@@ -278,7 +278,7 @@ def beginning_punctuation(s):
   s = re.sub(r'([a-zA-Z])]-([a-z][A-Z])', r'\1 - \2', s)
   s = re.sub(r'([a-zA-Z])-([0-9])', r'\1 - \2', s)
   s = re.sub(r'(^|\s)\-(\d)', r' negative \2', s)
-  s = re.sub("($)([0-9\.]+) (million|thousand|trillion|hundred|billion)", r'\2 \3 \1 ', s)
+  s = re.sub("($)([0-9.]+) (million|thousand|trillion|hundred|billion)", r'\2 \3 \1 ', s)
   s = re.sub("([a-zA-Z])-([a-zA-Z])", r'\1 - \2', s)
   s = re.sub(r'([0-9]+)x', r'\1 times', s)
   s = re.sub(r'x([0-9]+)', r'times \1', s)
