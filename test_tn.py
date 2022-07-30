@@ -1,28 +1,31 @@
 from en_norm import tts_norm
 
  #testing currency
-def test_1():
+def basic_test():
     t1 = "thousand"
     a1 = "thousand"
     assert(tts_norm(t1)==a1)
 
-# def currency_test():
-#     t2 = "$3.9 billion"
-#     a2 = "three point nine billion dollars"
-#     assert(tts_norm(t2)==a2)
-# t3 = "75% of children have a life expectancy of under 18."
-# a3 = "seventy five percent of children have a life expectancy of under eighteen"
-#assert(tts_norm(t3)==a3)
-# print(tts_norm(t3))
+def currency_test():
+    t2 = "$3.9 billion"
+    a2 = "three point nine billion dollars"
+    assert tts_norm(t2) == a2
 
-# t4 = "700,000 people"
-# a4 = "seven hundred thousand people"
-# assert(tts_norm(t4)==a4)
+def percent_test():
+    t3 = "75% of children have a life expectancy of under 18."
+    a3 = "seventy five percent of children have a life expectancy of under eighteen"
+    assert tts_norm(t3) == a3
 
-# # t5 = "on 5-6-22 the statistic"
-# # a5 = "on May sixth twenty twenty two the statistic"
-# # # print(tts_norm(t5))
-# # assert(tts_norm(t5)==a5)
+def comma_numbers_test():
+    t4 = "700,000 people"
+    a4 = "seven hundred thousand people"
+    assert tts_norm(t4) == a4
+
+def dash_date_test():
+    t5 = "on 5-6-22 the statistic"
+    a5_0 = "on May sixth twenty twenty two the statistic"
+    print(tts_norm(t5))
+    assert tts_norm(t5) == a5 or 
 
 # # t6 = "my son is John(III)"
 # # a6 = "my son is John three"
@@ -45,3 +48,8 @@ def test_1():
 # # print(tts_norm("Oct. 4 999 january 5th, 1954 in the year 1975 I earned 3412 pounds 4:00"))
 # # print(tts_norm("King Alphonso I (reigned 1506-1542) became a devout Roman Catholic.\n\n"))
 # # print(tts_norm("striking 1500 kilometres (Fig. 4.4)."))
+# basic_test()
+# currency_test()
+# percent_test()
+# comma_numbers_test()
+# dash_date_test()
