@@ -1,5 +1,6 @@
 # tn
 text normalization
+
 [![Python application](https://github.com/annapovey/tn/actions/workflows/python-app.yml/badge.svg)](https://github.com/annapovey/tn/actions/workflows/python-app.yml)
 ```
 # create virtual environment
