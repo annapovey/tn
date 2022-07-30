@@ -309,14 +309,19 @@ def final_punctuation(res, punctuation):
   return res
 
 def date_patterns(s):
+  # (ex. 90s -> ninety's, 1760s -> seventeen sixty's)
+  p = inflect.engine()
   decade_pattern = re.compile(r'[0-9]{2,4}s')
   decade_pattern_matches = reversed(list(decade_pattern.finditer(s)))
   for match in decade_pattern_matches:
-    s = s[:match.start()] + convert_year(s[match.start():match.end()-1]) + "'s" + s[match.end():]
+    s = s[:match.start()] + p.number_to_words(int(s[match.start():match.end()-1])) + "'s" + s[match.end():]
+
+  # (ex. (1721) -> seventeen twenty one)
   date_parenthesis_pattern = re.compile(r'\( \d{4} \)')
   date_parenthesis_matches = reversed(list(date_parenthesis_pattern.finditer(s)))
   for match in date_parenthesis_matches:
     s = s[:match.start()] + "( " + convert_year(s[match.start()+2:match.end()-2]) + " )" + s[match.end():]
+
   # (ex. 2012-2019 -> two thousand twelve to two thousand nineteen, 1931-1987 -> nineteen thirty one to nineteen eighty seven)
   date_range_pattern = re.compile(r'(\d{4})\-(\d{4}[^\-])')
   date_range_matches = reversed(list(date_range_pattern.finditer(s)))
@@ -324,11 +329,13 @@ def date_patterns(s):
     s = s[:match.start()] + convert_year(s[match.start():match.start() + 4]) + " to " + convert_year(
       s[match.start() + 5:match.start() + 9]) + s[match.end():]
 
+  # (ex. 1980 to 2000 -> ninteen eighty to two thousand)
   date_range_pattern = re.compile(r'(\d{4}) to (\d{4})')
   date_range_matches = reversed(list(date_range_pattern.finditer(s)))
   for match in date_range_matches:
     s = s[:match.start()] + convert_year(s[match.start():match.start() + 4]) + " to " + convert_year(s[match.end()-4:match.end()]) + s[match.end():]
-  # (ex. n. 13 1981 -> January thirteen nineteen eighty one, November 2 21)
+
+  # (ex. Jan. 13 1981 -> January thirteen nineteen eighty one, November 2 21 -> the second of November in two thousand twenty one)
   s_lower = s.lower()
   date_pattern = re.compile(
     r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|sep|october|oct|november|nov|december|dec)\.?\s\d+\,?\s\d+')
@@ -340,6 +347,7 @@ def date_patterns(s):
     else:
       s = s[:-(original_len - match.start())] + convert_date(match.group(), True) + s[-(
             original_len - match.end()):]
+
   s_lower = s.lower()
   date_pattern = re.compile(
     r'\d+\s(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|september|sept|sep|november|nov|december|dec)\.?\,?\s\d+')
@@ -375,7 +383,6 @@ def tts_norm(s, punctuation=False):
   s = beginning_punctuation(s)
   s = date_patterns(s)
   s = s.split(" ")
-  print(s)
   for x in s:
     add_period = False
     x = convert_abbreviation(x)
@@ -394,6 +401,5 @@ def tts_norm(s, punctuation=False):
     res += x + " "
     if add_period:
       res += "."
-  print(res)
   res = final_punctuation(res, punctuation)
   return res.strip(" ")
