@@ -1,5 +1,6 @@
-from en_norm import tts_norm
 import pytest
+from en_norm import tts_norm
+
  #testing currency
 def basic_test():
     t1 = "thousand"
