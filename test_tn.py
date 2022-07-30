@@ -25,7 +25,7 @@ def dash_date_test():
     t5 = "on 5-6-22 the statistic"
     a5_0 = "on May sixth twenty twenty two the statistic"
     print(tts_norm(t5))
-    assert tts_norm(t5) == a5 or 
+    assert tts_norm(t5) == a5
 
 # # t6 = "my son is John(III)"
 # # a6 = "my son is John three"
