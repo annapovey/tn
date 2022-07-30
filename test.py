@@ -2,7 +2,7 @@ from en_norm import tts_norm
 import pytest
 
 #testing currency
-def test1():
+def test():
     t1 = "thousand"
     a1 = "thousand"
     assert(tts_norm(t1)==a1)
