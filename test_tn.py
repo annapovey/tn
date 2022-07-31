@@ -1,8 +1,7 @@
-import pytest
 from en_norm import tts_norm
 
  #testing currency
-def basic_test():
+def test_1():
     t1 = "thousand"
     a1 = "thousand"
     assert(tts_norm(t1)==a1)
