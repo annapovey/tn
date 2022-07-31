@@ -6,22 +6,22 @@ def test_1():
     a1 = "thousand"
     assert(tts_norm(t1)==a1)
 
-def currency_test():
+def test_2():
     t2 = "$3.9 billion"
     a2 = "three point nine billion dollars"
     assert tts_norm(t2) == a2
 
-def percent_test():
+def test_3():
     t3 = "75% of children have a life expectancy of under 18."
     a3 = "seventy five percent of children have a life expectancy of under eighteen"
     assert tts_norm(t3) == a3
 
-def comma_numbers_test():
+def test_4():
     t4 = "700,000 people"
     a4 = "seven hundred thousand people"
     assert tts_norm(t4) == a4
 
-def dash_date_test():
+def test_5():
     t5 = "on 5-6-22 the statistic"
     a5 = "on May sixth twenty twenty two the statistic"
     print(tts_norm(t5))
