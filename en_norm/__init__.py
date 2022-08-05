@@ -69,7 +69,7 @@ def convert_year(y):
   elif y < 2000 and y >= 1100:
     # if last two digits are zeros (ex. 1900 -> ninetenn hundred, 1200 -> twelve hundred)
     if y % 100 == 0:
-      y = p.number_to_words(y / 100) + " hundred"
+      y = p.number_to_words(int(y / 100)) + " hundred"
     # if last two digits less than ten (ex. 1909 -> ninetenn O nine, 1301 -> thirteen O one)
     elif y % 100 < 10:
       y = p.number_to_words(int((y - y % 100) / 100)) + " O " + p.number_to_words(y % 100)
@@ -161,6 +161,7 @@ def convert_ordinal(x):
   if (any(char.isdigit() for char in x)
       and not all(char.isdigit() for char in x)):
     if x[len(x) - 2:] in end_ordinal:
+      print(x)
       p = inflect.engine()
       return p.number_to_words(x)
   return x
@@ -278,7 +279,7 @@ def beginning_punctuation(s):
   s = re.sub(r'([a-zA-Z])]-([a-z][A-Z])', r'\1 - \2', s)
   s = re.sub(r'([a-zA-Z])-([0-9])', r'\1 - \2', s)
   s = re.sub(r'(^|\s)\-(\d)', r' negative \2', s)
-  s = re.sub("($)([0-9.]+) (million|thousand|trillion|hundred|billion)", r'\2 \3 \1 ', s)
+  s = re.sub(r'(\$)([0-9\.]+)\s(million|thousand|trillion|hundred|billion)', r'\2 \3 \1 ', s)
   s = re.sub("([a-zA-Z])-([a-zA-Z])", r'\1 - \2', s)
   s = re.sub(r'([0-9]+)x', r'\1 times', s)
   s = re.sub(r'x([0-9]+)', r'times \1', s)
@@ -348,6 +349,7 @@ def date_patterns(s):
       s = s[:-(original_len - match.start())] + convert_date(match.group(), True) + s[-(
             original_len - match.end()):]
 
+  # (ex. january )
   s_lower = s.lower()
   date_pattern = re.compile(
     r'\d+\s(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|october|oct|september|sept|sep|november|nov|december|dec)\.?\,?\s\d+')
@@ -359,31 +361,38 @@ def date_patterns(s):
     else:
       s = s[:-(original_len - match.start())] + convert_date(match.group(), True) + s[-(
             original_len - match.end()):]
+
   year = re.compile(r'[0-9]{4}')
   year_matches = reversed(list(year.finditer(s)))
   for match in year_matches:
+    print(match)
+    print(convert_year(s[match.start():match.end()]))
     s = s[:match.start()] + convert_year(s[match.start():match.end()])+ s[match.end():]
   
   s_lower = s.lower()
-  month_date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|sep|october|oct|november|nov|december|dec)\.?\s\d+')
+  month_date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|sep|october|oct|november|nov|december|dec)\.?\s\d+[a-z]{,3}')
   original_len = len(s_lower)
   month_date_matches = month_date_pattern.finditer(s_lower)
   for match in month_date_matches:
     match_text = s[match.start():match.end()].split()
     p = inflect.engine()
     if (original_len - match.end()) == 0:
-      s = s[:-(original_len - match.start())] + match_text[0] + " " + p.number_to_words(p.ordinal(int(match_text[1])))
+      s = s[:-(original_len - match.start())] + match_text[0] + " " + p.number_to_words(match_text[1])
     else:
-      s = s[:-(original_len - match.start())] + match_text[0] + " " + p.number_to_words(p.ordinal(int(match_text[1]))) + s[-(original_len - match.end()):]
+      s = s[:-(original_len - match.start())] + match_text[0] + " " + p.number_to_words(match_text[1]) + s[-(original_len - match.end()):]
   return s
 
 def tts_norm(s, punctuation=False):
   res = ""
   # if punctuation is being kept, it should be spaced out from regular
+  print(s)
   s = beginning_punctuation(s)
+  print(s)
   s = date_patterns(s)
+  print(s)
   s = s.split(" ")
   for x in s:
+    print(x)
     add_period = False
     x = convert_abbreviation(x)
     if len(x) > 1:
@@ -403,3 +412,5 @@ def tts_norm(s, punctuation=False):
       res += "."
   res = final_punctuation(res, punctuation)
   return res.strip(" ")
+
+print(tts_norm("1800"))
