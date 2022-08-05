@@ -161,7 +161,6 @@ def convert_ordinal(x):
   if (any(char.isdigit() for char in x)
       and not all(char.isdigit() for char in x)):
     if x[len(x) - 2:] in end_ordinal:
-      print(x)
       p = inflect.engine()
       return p.number_to_words(x)
   return x
@@ -365,8 +364,6 @@ def date_patterns(s):
   year = re.compile(r'[0-9]{4}')
   year_matches = reversed(list(year.finditer(s)))
   for match in year_matches:
-    print(match)
-    print(convert_year(s[match.start():match.end()]))
     s = s[:match.start()] + convert_year(s[match.start():match.end()])+ s[match.end():]
   
   s_lower = s.lower()
@@ -385,14 +382,10 @@ def date_patterns(s):
 def tts_norm(s, punctuation=False):
   res = ""
   # if punctuation is being kept, it should be spaced out from regular
-  print(s)
   s = beginning_punctuation(s)
-  print(s)
   s = date_patterns(s)
-  print(s)
   s = s.split(" ")
   for x in s:
-    print(x)
     add_period = False
     x = convert_abbreviation(x)
     if len(x) > 1:
@@ -412,5 +405,3 @@ def tts_norm(s, punctuation=False):
       res += "."
   res = final_punctuation(res, punctuation)
   return res.strip(" ")
-
-print(tts_norm("1800"))
