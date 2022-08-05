@@ -1,6 +1,11 @@
 # tn
 
 [![Python application](https://github.com/annapovey/tn/actions/workflows/python-app.yml/badge.svg)](https://github.com/annapovey/tn/actions/workflows/python-app.yml)
+
+to test project:
+https://annapovey-tn-main-g6iaoc.streamlitapp.com/
+
+
 ```
 # create virtual environment
 python3 -m venv norm_env
