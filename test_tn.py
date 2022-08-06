@@ -22,6 +22,15 @@ def test_4():
     a4 = "seven hundred thousand people"
     assert tts_norm(t4) == a4
 
+def test_5():
+    t5 = "He was #8 out of the 10 people in line."
+    a5 = "He was number eight out of the ten people in line"
+    assert tts_norm(t5) == a5
+
+def test_6():
+    t6 = "80% of the children like icecream."
+    a6 = "eighty percent of the children like icecream"
+    assert tts_norm(t6) == a6
 # def test_5():
 #     t5 = "on 5-6-22 the statistic"
 #     a5 = "on May sixth twenty twenty two the statistic"
