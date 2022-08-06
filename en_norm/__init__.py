@@ -284,7 +284,7 @@ def beginning_punctuation(s):
   s = re.sub(r'x([0-9]+)', r'times \1', s)
   s = s.replace("%", " percent")
   s = s.replace("$ ", "dollars")
-  s = re.sub(r'#([0-9]+)', 'number \1', s)
+  s = re.sub(r'\#([0-9]+)', 'number \1', s)
   s = re.sub(u'\N{DEGREE SIGN}', 'degrees ', s)
   s = re.sub(r'degrees ([0-9]+)', '\1 degrees', s)
   s = re.sub(' +', ' ', s)
