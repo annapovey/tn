@@ -13,4 +13,4 @@ submit_button = form.form_submit_button(label = 'submit')
 # submit_button2 = form2.form_submit_button(label = 'submit')
 # if submit_button and submit_button2:
 st.write(cb1)
-st.write(tts_norm(text_input))
+st.write(tts_norm(text_input, cb1))
