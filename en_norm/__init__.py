@@ -380,7 +380,7 @@ def date_patterns(s):
       s = s[:-(original_len - match.start())] + match_text[0] + " " + p.number_to_words(match_text[1]) + s[-(original_len - match.end()):]
   return s
 
-def tts_norm(s, punctuation=False):
+def tts_norm(s, punctuation=False, uppercase=False,):
   res = ""
   # if punctuation is being kept, it should be spaced out from regular
   s = beginning_punctuation(s)
@@ -405,4 +405,6 @@ def tts_norm(s, punctuation=False):
     if add_period:
       res += "."
   res = final_punctuation(res, punctuation)
+  if uppercase:
+    res = res.upper()
   return res.strip(" ")
