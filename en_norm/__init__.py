@@ -284,15 +284,16 @@ def beginning_punctuation(s):
   s = re.sub(r'x([0-9]+)', r'times \1', s)
   s = s.replace("%", " percent")
   s = s.replace("$ ", "dollars")
+  s = re.sub(r'#([0-9]+)', 'number \s', s)
   s = re.sub(u'\N{DEGREE SIGN}', 'degrees ', s)
   s = re.sub(r'degrees ([0-9]+)', '\1 degrees', s)
   s = re.sub(' +', ' ', s)
   return s
 
 def final_punctuation(res, punctuation):
-  # acronyms are seperated by spaces (ex. NASA -> N A S A)
-  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
-  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
+  # # acronyms are seperated by spaces (ex. NASA -> N A S A)
+  # res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
+  # res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
   res = res.replace("  \"  ", "\"")
   res = res.replace(" \" ", "\"")
   if punctuation:
