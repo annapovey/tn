@@ -3,7 +3,7 @@ from en_norm.__init__ import tts_norm
 st.header("Text Normalization for Language Models")
 form = st.form(key = 'my_form')
 text_input = form.text_input(label = 'input text here')
-st.write("example: $3.9 billion -> three point nine billion dollars")
+form.write("example: $3.9 billion -> three point nine billion dollars")
 cb1 = form.checkbox("keep punctuation")
 cb2 = form.checkbox("make text uppercase")
 cb3 = form.checkbox("remove non-asci characters")
