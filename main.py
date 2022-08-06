@@ -2,8 +2,8 @@ import streamlit as st
 from en_norm.__init__ import tts_norm
 form = st.form(key = 'my_form')
 text_input = form.text_input(label = 'input text here')
-rb1 = form.radio("keep punctuation?", (True))
-rb2 = form.radio("make text uppercase?", (True))
+rb1 = form.radio("keep punctuation?")
+rb2 = form.radio("make text uppercase?")
 submit_button = form.form_submit_button(label = 'submit')
 # form2 = st.form(key = 'my_form2')
 # text_input2 = form2.text_input(label = 'keep punctuation? input \'True\' or \'False\'')
