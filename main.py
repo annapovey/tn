@@ -6,4 +6,5 @@ submit_button = form.form_submit_button(label = 'submit')
 form2 = st.form(key = 'my_form2')
 text_input2 = form2.text_input(label = 'keep punctuation? input \'True\' or \'False\'')
 submit_button2 = form2.form_submit_button(label = 'submit')
-st.write(tts_norm(text_input, bool(text_input2)))
+if text_input and text_input2:
+    st.write(tts_norm(text_input, bool(text_input2)))
