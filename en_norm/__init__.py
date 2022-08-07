@@ -292,8 +292,8 @@ def beginning_punctuation(s):
 
 def final_punctuation(res, punctuation):
   # # acronyms are seperated by spaces (ex. NASA -> N A S A)
-  # res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
-  # res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
+  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
+  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
   res = res.replace("  \"  ", "\"")
   res = res.replace(" \" ", "\"")
   if punctuation:
@@ -362,7 +362,7 @@ def date_patterns(s):
       s = s[:-(original_len - match.start())] + convert_date(match.group(), True) + s[-(
             original_len - match.end()):]
 
-  year = re.compile(r'[0-9]{4}')
+  year = re.compile(r'(1|2)[0-9]{3}')
   year_matches = reversed(list(year.finditer(s)))
   for match in year_matches:
     s = s[:match.start()] + convert_year(s[match.start():match.end()])+ s[match.end():]
@@ -384,9 +384,10 @@ def tts_norm(s, punctuation=False, uppercase=False,):
   res = ""
   # if punctuation is being kept, it should be spaced out from regular
   s = beginning_punctuation(s)
+  print(s)
   s = date_patterns(s)
   s = s.split(" ")
-  for x in s:
+  for x in s: 
     add_period = False
     x = convert_abbreviation(x)
     if len(x) > 1:
@@ -404,6 +405,7 @@ def tts_norm(s, punctuation=False, uppercase=False,):
     res += x + " "
     if add_period:
       res += "."
+  print(res)
   res = final_punctuation(res, punctuation)
   if uppercase:
     res = res.upper()
