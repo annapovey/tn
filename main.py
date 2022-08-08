@@ -5,7 +5,7 @@ from en_norm.__init__ import tts_norm
 logging.basicConfig(filename = 'maininfo.log', level = logging.INFO, format = '%(asctime)s:%(levelname)s:%(message)s')
 st.header("Text Normalization for ASR")
 container = st.container()
-container.caption("Mimicks libri speech text normalization")
+container.caption("Mimicks libri speech text normalization\n - numbers to words\n - CNN -> C N N")
 container.caption(" - numbers to words")
 container.caption(" - CNN -> C N N")
 st.caption(" - removes punctuation")
