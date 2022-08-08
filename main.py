@@ -6,7 +6,7 @@ logging.basicConfig(filename = 'maininfo.log', level = logging.INFO, format = '%
 st.header("Text Normalization for ASR")
 form = st.form(key = 'my_form')
 text_input = form.text_input(label = 'input text here')
-form.write("example: $3.9 billion -> three point nine billion dollars")
+form.caption("example: $3.9 billion -> three point nine billion dollars")
 cb1 = form.checkbox("keep punctuation")
 cb2 = form.checkbox("make text uppercase")
 cb3 = form.checkbox("remove non-asci characters")
