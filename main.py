@@ -19,6 +19,9 @@ try:
     st.write(tts_norm(text_input, cb1, cb2))
 except:
     logging.info(text_input)
-st.markdown("######")
+st.markdown("##")
+st.markdown("##")
+st.markdown("##")
+st.markdown("##")
 container = st.container()
 container.caption("Mimicks libri speech text normalization")
