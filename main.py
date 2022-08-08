@@ -20,5 +20,5 @@ try:
 except:
     logging.info(text_input)
 container = st.container()
-st.write("##")
+st.write("#######")
 container.caption("Mimicks libri speech text normalization")
