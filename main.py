@@ -4,9 +4,10 @@ from en_norm.__init__ import tts_norm
 
 logging.basicConfig(filename = 'maininfo.log', level = logging.INFO, format = '%(asctime)s:%(levelname)s:%(message)s')
 st.header("Text Normalization for ASR")
-st.caption("Mimicks libri speech text normalization")
-st.caption(" - numbers to words")
-st.caption(" - CNN -> C N N")
+container = st.container()
+container.caption("Mimicks libri speech text normalization")
+container.caption(" - numbers to words")
+container.caption(" - CNN -> C N N")
 st.caption(" - removes punctuation")
 st.caption(" - mimicks speech for dates")
 form = st.form(key = 'my_form')
