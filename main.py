@@ -19,4 +19,5 @@ try:
     st.write(tts_norm(text_input, cb1, cb2))
 except:
     logging.info(text_input)
-st.caption("Mimicks libri speech text normalization")
+form2 = st.form(key = 'my_form2')
+form2.caption("Mimicks libri speech text normalization")
