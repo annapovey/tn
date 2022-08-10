@@ -17,7 +17,7 @@ submit_button = form.form_submit_button(label = 'submit')
 # text_input2 = form2.text_input(label = 'keep punctuation? input \'True\' or \'False\'')
 # submit_button2 = form2.form_submit_button(label = 'submit')
 # if submit_button and submit_button2:
-r = requests.put(url = 'http://127.0.0.1:8000/', params = {'text': text_input})
+r = requests.put('http://127.0.0.1:8000/', json = {"text": "hey"})
 data = r.json()
 st.write(data)
 try:
