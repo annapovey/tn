@@ -19,7 +19,7 @@ submit_button = form.form_submit_button(label = 'submit')
 # if submit_button and submit_button2:
 r = requests.put(url = 'http://127.0.0.1:8000/', params = {'text': text_input})
 data = r.json()
-st.write()
+st.write(data)
 try:
     st.write(tts_norm(text_input, cb1, cb2))
 except:
