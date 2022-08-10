@@ -1,4 +1,5 @@
 import streamlit as st
+import requests
 import logging
 from en_norm.__init__ import tts_norm
 
@@ -16,6 +17,9 @@ submit_button = form.form_submit_button(label = 'submit')
 # text_input2 = form2.text_input(label = 'keep punctuation? input \'True\' or \'False\'')
 # submit_button2 = form2.form_submit_button(label = 'submit')
 # if submit_button and submit_button2:
+r = requests.put(url = 'http://127.0.0.1:8000/', params = {'text': text_input})
+data = r.json()
+st.write()
 try:
     st.write(tts_norm(text_input, cb1, cb2))
 except:
