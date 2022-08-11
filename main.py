@@ -20,7 +20,8 @@ submit_button = form.form_submit_button(label = 'submit')
 r = requests.put('http://54.145.119.249/', json = {"text": "hey"})
 data = r.json()
 try:
-    st.write(tts_norm(text_input, cb1, cb2))
+    #st.write(tts_norm(text_input, cb1, cb2))
+    st.write(data)
 except:
     logging.info(text_input)
 # container = st.container()
