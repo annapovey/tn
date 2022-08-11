@@ -17,11 +17,8 @@ submit_button = form.form_submit_button(label = 'submit')
 # text_input2 = form2.text_input(label = 'keep punctuation? input \'True\' or \'False\'')
 # submit_button2 = form2.form_submit_button(label = 'submit')
 # if submit_button and submit_button2:
-r = requests.put('http://54.145.119.249/', json = {"text": "hey"})
-data = r.json()
 try:
-    #st.write(tts_norm(text_input, cb1, cb2))
-    st.write(data)
+    st.write(tts_norm(text_input, cb1, cb2))
 except:
     logging.info(text_input)
 # container = st.container()
