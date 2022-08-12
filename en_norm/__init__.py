@@ -5,6 +5,7 @@ from dateutil import parser
 import re
 import random
 
+ABBR_PATH = '../tn/abbreviation.txt'
 
 def convert_currency(x):
   """
@@ -239,7 +240,7 @@ def convert_abbreviation(x):
     Returns:
       Returns a string.
   """
-  txt_file = open("abbreviation.txt")
+  txt_file = open(ABBR_PATH) 
   for line in txt_file:
     if line.split(" ")[0] == x:
       x = line.split(" ", 1)[1].strip("\n")
