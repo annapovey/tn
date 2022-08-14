@@ -299,6 +299,7 @@ def final_punctuation(res, punctuation):
   res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
   res = res.replace("  \"  ", "\"")
   res = res.replace(" \" ", "\"")
+  res = re.sub(r' +', ' ', res)
   if punctuation:
     res = res.replace(" .", ".")
     res = res.replace(" ,", ",")
@@ -385,7 +386,7 @@ def date_patterns(s):
       s = s[:-(original_len - match.start())] + match_text[0] + " " + p.number_to_words(match_text[1]) + s[-(original_len - match.end()):]
   return s
 
-def tts_norm(s, punctuation=False, uppercase=False,):
+def tts_norm(s, punctuation=False, uppercase=False):
   res = ""
   # if punctuation is being kept, it should be spaced out from regular
   s = beginning_punctuation(s)
