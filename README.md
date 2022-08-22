@@ -3,7 +3,7 @@
 [![Python application](https://github.com/annapovey/tn/actions/workflows/python-app.yml/badge.svg)](https://github.com/annapovey/tn/actions/workflows/python-app.yml)
 
 to test project:
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://annapovey-tn-main-g6iaoc.streamlitapp.com/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://annapovey-tn-github-main-l25hmr.streamlitapp.com/)
 
 
 ```
