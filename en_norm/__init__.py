@@ -41,6 +41,7 @@ def convert_currency(x):
         x += " dollar"
       else:
         x += " dollars"
+   x = re.sub(r'([0-9]+)([a-zA-Z])', r'\1 \2', x)
   return x
 
 
