@@ -277,6 +277,7 @@ def beginning_punctuation(s):
   s = s.replace("\n", " \n")
   s = s.replace(", ", " , ")
   s = s.replace("!", " !")
+  s = re.sub(r'([0-9])-([a-zA-Z])', r'\1 - \2', s)
   s = s.replace("?", " ?")
   s = re.sub(r'([a-zA-Z])]-([a-z][A-Z])', r'\1 - \2', s)
   s = re.sub(r'([a-zA-Z])-([0-9])', r'\1 - \2', s)
