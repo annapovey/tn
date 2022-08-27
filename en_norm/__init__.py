@@ -315,7 +315,7 @@ def final_punctuation(res, punctuation):
     #removing everything that is special character and punctuation keeping apostrophe
     res = re.sub(r'[^0-9^A-Z^a-z^\n^\']', ' ', res)
   # for left over digits
-  res = finaldigits(res)
+  res = final_digits(res)
   res = re.sub(r' +', ' ', res)
   return res
 
