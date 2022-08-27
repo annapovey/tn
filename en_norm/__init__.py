@@ -41,7 +41,6 @@ def convert_currency(x):
         x += " dollar"
       else:
         x += " dollars"
-   x = re.sub(r'([0-9]+)([a-zA-Z])', r'\1 \2', x)
   return x
 
 
@@ -393,6 +392,7 @@ def tts_norm(s, punctuation=False, uppercase=False):
   s = beginning_punctuation(s)
   print(s)
   s = date_patterns(s)
+  s = re.sub(r'([0-9]+)([a-zA-Z])', r'\1 \2', s)
   s = s.split(" ")
   for x in s: 
     add_period = False
