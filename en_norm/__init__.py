@@ -279,7 +279,7 @@ def beginning_punctuation(s):
   s = s.replace("!", " !")
   s = re.sub(r'([0-9])-([a-zA-Z])', r'\1 - \2', s)
   s = s.replace("?", " ?")
-  s = re.sub(r'([a-zA-Z])]-([a-z][A-Z])', r'\1 - \2', s)
+  s = re.sub(r'([a-zA-Z])-([a-z][A-Z])', r'\1 - \2', s)
   s = re.sub(r'([a-zA-Z])-([0-9])', r'\1 - \2', s)
   s = re.sub(r'(^|\s)\-(\d)', r' negative \2', s)
   s = re.sub(r'(\$)([0-9\.]+)\s(million|thousand|trillion|hundred|billion)', r'\2 \3 \1 ', s)
@@ -312,9 +312,21 @@ def final_punctuation(res, punctuation):
     res = res.replace(" !", "!")
     res = res.replace(" ?", "?")
   else:
-    res = re.sub(r'[^A-Z^a-z^\n^\']', ' ', res)
+    #removing everything that is special character and punctuation keeping apostrophe
+    res = re.sub(r'[^0-9^A-Z^a-z^\n^\']', ' ', res)
+  # for left over digits
+  res = finaldigits(res)
   res = re.sub(r' +', ' ', res)
   return res
+
+def final_digits(s):
+  p = inflect.engine()
+  final_digit_pattern = re.compile(r'[0-9]+')
+  final_digit_matches = reversed(list(final_digit_pattern.finditer(s)))
+  for match in final_digit_matches:
+    s = s[:match.start()] + p.number_to_words(int(s[match.start():match.end()-1)) + s[match.end():]
+  s = re.sub(r'[^0-9^A-Z^a-z^\n^\']', ' ', s)
+  return s
 
 def date_patterns(s):
   # (ex. 90s -> ninety's, 1760s -> seventeen sixty's)
