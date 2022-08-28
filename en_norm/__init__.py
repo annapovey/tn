@@ -296,8 +296,8 @@ def beginning_punctuation(s):
 
 def final_punctuation(res, punctuation):
   # # acronyms are seperated by spaces (ex. NASA -> N A S A)
-  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
-  res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
+  #res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
+  #res = re.sub(r'([A-Z])([A-Z])', r'\1 \2', res)
   res = res.replace("  \"  ", "\"")
   res = res.replace(" \" ", "\"")
   res = re.sub(r' +', ' ', res)
