@@ -242,8 +242,8 @@ def convert_abbreviation(x):
   """
   txt_file = open(ABBR_PATH) 
   for line in txt_file:
-    if line.split(" ")[0] == x:
-      x = line.split(" ", 1)[1].strip("\n")
+    if line.split("\t")[0] == x:
+      x = line.split("\t")[1].strip("\n")
       return x
   return x
 
