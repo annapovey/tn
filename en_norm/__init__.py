@@ -240,11 +240,11 @@ def convert_abbreviation(x):
     Returns:
       Returns a string.
   """
-  txt_file = open(ABBR_PATH) 
+  txt_file = open(ABBR_PATH)
   for line in txt_file:
     if line.split("\t")[0] == x:
       x = line.split("\t")[1].strip("\n")
-      return x
+     return x
   return x
 
 def convert_digit(x):
@@ -255,6 +255,11 @@ def convert_digit(x):
   for match in dash_pattern_matches:
     x = x[:match.start()] + p.number_to_words(x[match.start():match.start() + 2]) + " " + p.number_to_words(
       x[match.end() - 2:match.end()]) + x[match.end():]
+  s = re.sub(r'([0-9]+)([a-zA-Z])', r'\1 \2', s)
+  mixed_pattern = re.compile(r'([0-9]+)([a-zA-Z])')
+  mixed_pattern_matches = reversed(list(dash_pattern.finditer(x)))
+  for match in mixed_pattern_matches:
+    x = x[:match.start()] + p.number_to_words(x[match.start():-1]) + " " + x[-1:] + x[match.end():]
   x_without_punc = x.replace(",", "")
   x_without_punc = x_without_punc.replace(".", "")
   if (x_without_punc.isdigit()):
@@ -264,6 +269,7 @@ def convert_digit(x):
       x = x.strip(".")
     x = x.replace(",", "")
     x = p.number_to_words(x) + " "
+    s = re.sub(r'([0-9]+)([a-zA-Z])', r'\1 \2', s)
   return x
 
 def beginning_punctuation(s):
@@ -405,7 +411,6 @@ def tts_norm(s, punctuation=False, uppercase=False):
   s = beginning_punctuation(s)
   print(s)
   s = date_patterns(s)
-  s = re.sub(r'([0-9]+)([a-zA-Z])', r'\1 \2', s)
   s = s.split(" ")
   for x in s: 
     add_period = False
