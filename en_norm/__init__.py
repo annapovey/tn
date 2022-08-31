@@ -244,7 +244,7 @@ def convert_abbreviation(x):
   for line in txt_file:
     if line.split("\t")[0] == x:
       x = line.split("\t")[1].strip("\n")
-     return x
+      return x
   return x
 
 def convert_digit(x):
