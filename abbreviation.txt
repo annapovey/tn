@@ -1,3 +1,5 @@
+P.G.	page
+p.g.	page
 Ph.D.	p h d
 Hon.	honorable
 &	and
