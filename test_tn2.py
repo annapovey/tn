@@ -11,6 +11,7 @@ def test_1():
     try:
     # only two items in a row
         for line in lines:
+            print(t1 + " -> " + a1)
             t1, a1 = line.split("|")
             assert(tts_norm(t1.strip())==a1.strip())
     except AssertionError as err:
