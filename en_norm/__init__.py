@@ -256,8 +256,10 @@ def convert_digit(x):
     x = x[:match.start()] + p.number_to_words(x[match.start():match.start() + 2]) + " " + p.number_to_words(
       x[match.end() - 2:match.end()]) + x[match.end():]
   mixed_pattern = re.compile(r'([0-9]+)([a-zA-Z])')
+  print(x)
   mixed_pattern_matches = reversed(list(dash_pattern.finditer(x)))
   for match in mixed_pattern_matches:
+    print(match)
     x = x[:match.start()] + p.number_to_words(x[match.start():match.end() - 1]) + " " + x[match.end() - 1:match.end()] + x[match.end():]
   x_without_punc = x.replace(",", "")
   x_without_punc = x_without_punc.replace(".", "")
