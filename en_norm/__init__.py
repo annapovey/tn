@@ -196,7 +196,7 @@ def convert_roman(x):
     Returns:
       Returns a string.
   """
-  validRomanNumerals = ["X", "V", "I"]
+  validRomanNumerals = ["C", "L", "X", "V", "I"]
   for char in x:
     if char not in validRomanNumerals:
       return x
