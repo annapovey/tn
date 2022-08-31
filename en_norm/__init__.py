@@ -414,6 +414,9 @@ def tts_norm(s, punctuation=False, uppercase=False):
   s = beginning_punctuation(s)
   print(s)
   a1 = s
+  a2 = ""
+  a3 = ""
+  a4 = ""
   s = date_patterns(s)
   s = s.split(" ")
   for x in s:
