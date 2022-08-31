@@ -184,6 +184,10 @@ def value(r):
     return 5
   if (r == 'X'):
     return 10
+  if (r == 'L'):
+    return 50
+  if (r == 'C'):
+    return 100
   return -1
 
 
