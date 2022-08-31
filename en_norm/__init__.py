@@ -255,7 +255,7 @@ def convert_digit(x):
   for match in dash_pattern_matches:
     x = x[:match.start()] + p.number_to_words(x[match.start():match.start() + 2]) + " " + p.number_to_words(
       x[match.end() - 2:match.end()]) + x[match.end():]
-  mixed_pattern = re.compile(r'([0-9]+)([a-zA-Z])')
+  mixed_pattern = re.compile(r'[0-9]+[a-zA-Z]')
   print(x)
   mixed_pattern_matches = reversed(list(mixed_pattern.finditer(x)))
   for match in mixed_pattern_matches:
