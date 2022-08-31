@@ -418,7 +418,7 @@ def tts_norm(s, punctuation=False, uppercase=False):
       if x[len(x) - 1] == ".":
         if punctuation:
           add_period = True
-      x = x[:len(x) - 1]
+        x = x[:len(x) - 1]
     if any(char.isdigit() for char in x):
       x = convert_currency(x)
       x = convert_date(x)
