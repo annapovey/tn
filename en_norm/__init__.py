@@ -389,7 +389,6 @@ def date_patterns(s):
   year_matches = reversed(list(year.finditer(s)))
   for match in year_matches:
     s = s[:match.start()] + convert_year(s[match.start():match.end()])+ s[match.end():]
-  
   s_lower = s.lower()
   month_date_pattern = re.compile(r'(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|august|aug|september|sept|sep|october|oct|november|nov|december|dec)\.?\s\d+[a-z]{,3}')
   original_len = len(s_lower)
