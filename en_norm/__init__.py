@@ -268,7 +268,6 @@ def convert_digit(x):
       x = x.strip(".")
     x = x.replace(",", "")
     x = p.number_to_words(x) + " "
-    s = re.sub(r'([0-9]+)([a-zA-Z])', r'\1 \2', s)
   return x
 
 def beginning_punctuation(s):
