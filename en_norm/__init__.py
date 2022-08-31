@@ -258,7 +258,7 @@ def convert_digit(x):
   mixed_pattern = re.compile(r'([0-9]+)([a-zA-Z])')
   mixed_pattern_matches = reversed(list(dash_pattern.finditer(x)))
   for match in mixed_pattern_matches:
-    x = x[:match.start()] + p.number_to_words(x[match.start():-1]) + " " + x[-1:] + x[match.end():]
+    x = x[:match.start()] + p.number_to_words(x[match.start():match.end() - 1]) + " " + x[match.end() - 1:] + x[match.end():]
   x_without_punc = x.replace(",", "")
   x_without_punc = x_without_punc.replace(".", "")
   if (x_without_punc.isdigit()):
@@ -410,7 +410,7 @@ def tts_norm(s, punctuation=False, uppercase=False):
   print(s)
   s = date_patterns(s)
   s = s.split(" ")
-  for x in s: 
+  for x in s:
     add_period = False
     x = convert_abbreviation(x)
     if len(x) > 1:
