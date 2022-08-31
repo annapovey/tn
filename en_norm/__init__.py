@@ -413,6 +413,7 @@ def tts_norm(s, punctuation=False, uppercase=False):
   # if punctuation is being kept, it should be spaced out from regular
   s = beginning_punctuation(s)
   print(s)
+  a1 = s
   s = date_patterns(s)
   s = s.split(" ")
   for x in s:
@@ -423,12 +424,15 @@ def tts_norm(s, punctuation=False, uppercase=False):
         if punctuation:
           add_period = True
         x = x[:len(x) - 1]
+    a2 = x
     if any(char.isdigit() for char in x):
       x = convert_currency(x)
       x = convert_date(x)
+      a3 = x
       x = convert_time(x)
       x = convert_ordinal(x)
       x = convert_digit(x)
+      a4 = x
     x = convert_roman(x)
     res += x + " "
     if add_period:
@@ -437,4 +441,4 @@ def tts_norm(s, punctuation=False, uppercase=False):
   res = final_punctuation(res, punctuation)
   if uppercase:
     res = res.upper()
-  return res.strip(" ")
+  return res.strip(" ") + a1 + a2 + a3 + a4
