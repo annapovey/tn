@@ -333,7 +333,8 @@ def final_digits(s):
   final_digit_matches = reversed(list(final_digit_pattern.finditer(s)))
   for match in final_digit_matches:
     s = s[:match.start()] + p.number_to_words(int(s[match.start():match.end()-1])) + s[match.end():]
-  s = re.sub(r'[^0-9^A-Z^a-z^\n^\']', ' ', s)
+  if not punctuation:
+    s = re.sub(r'[^0-9^A-Z^a-z^\n^\']', ' ', s)
   return s
 
 def date_patterns(s):
