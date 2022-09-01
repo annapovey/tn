@@ -323,11 +323,11 @@ def final_punctuation(res, punctuation):
     #removing everything that is special character and punctuation keeping apostrophe
     res = re.sub(r'[^0-9^A-Z^a-z^\n^\']', ' ', res)
   # for left over digits
-  res = final_digits(res)
+  res = final_digits(res, punctuation)
   res = re.sub(' +', ' ', res)
   return res
 
-def final_digits(s):
+def final_digits(s, punctuation):
   p = inflect.engine()
   final_digit_pattern = re.compile(r'[0-9]+')
   final_digit_matches = reversed(list(final_digit_pattern.finditer(s)))
