@@ -1,3 +1,11 @@
+Mr.	Mister
+Ms.	 Miss
+Mrs.	 Missis
+Dr.	 Doctor
+Mr	 mister
+Ms	 Miss
+Mrs	 Missis
+Dr	 Doctor
 P.G.	page
 p.g.	page
 Ph.D.	p h d
