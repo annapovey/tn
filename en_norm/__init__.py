@@ -260,10 +260,8 @@ def convert_digit(x):
     x = x[:match.start()] + p.number_to_words(x[match.start():match.start() + 2]) + " " + p.number_to_words(
       x[match.end() - 2:match.end()]) + x[match.end():]
   mixed_pattern = re.compile(r'[0-9]+[a-zA-Z]')
-  print(x)
   mixed_pattern_matches = reversed(list(mixed_pattern.finditer(x)))
   for match in mixed_pattern_matches:
-    print(match)
     x = x[:match.start()] + p.number_to_words(x[match.start():match.end() - 1]) + " " + x[match.end() - 1:match.end()] + x[match.end():]
   x_without_punc = x.replace(",", "")
   x_without_punc = x_without_punc.replace(".", "")
@@ -326,7 +324,7 @@ def final_punctuation(res, punctuation):
     res = re.sub(r'[^0-9^A-Z^a-z^\n^\']', ' ', res)
   # for left over digits
   res = final_digits(res)
-  res = re.sub(r' +', ' ', res)
+  res = re.sub(' +', ' ', res)
   return res
 
 def final_digits(s):
@@ -412,7 +410,6 @@ def tts_norm(s, punctuation=False, uppercase=False):
   res = ""
   # if punctuation is being kept, it should be spaced out from regular
   s = beginning_punctuation(s)
-  print(s)
   a1 = s
   a2 = ""
   a3 = ""
@@ -440,8 +437,7 @@ def tts_norm(s, punctuation=False, uppercase=False):
     res += x + " "
     if add_period:
       res += "."
-  print(res)
   res = final_punctuation(res, punctuation)
   if uppercase:
     res = res.upper()
-  return res.strip(" ") + a1 + a2 + a3 + a4
+  return res.strip(" ")
