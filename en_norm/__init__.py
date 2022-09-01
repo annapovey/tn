@@ -441,4 +441,5 @@ def tts_norm(s, punctuation=False, uppercase=False):
   res = final_punctuation(res, punctuation)
   if uppercase:
     res = res.upper()
+  print(res)
   return res.strip(" ")
